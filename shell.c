@@ -5,6 +5,8 @@ int main(int ac, char **av, char *en[])
 	char *cmd = NULL;
 	size_t cmdsize = 0;
 	char *args[2];
+	pid_t child_pid;
+	int pid_status;
 	
 	(void)ac;
 	(void)av;
@@ -22,14 +24,25 @@ int main(int ac, char **av, char *en[])
 		cmd[strcspn(cmd, "\n")] = '\0';
 		args[0] = cmd;
 		args[1] = NULL;
-		if (execve(cmd, args, NULL) == -1)
+		
+		child_pid = fork();
+		if (child_pid == -1)
 		{
 			printf("%s: No such file or directory\n", av[0]);
 		}
+
+		if (child_pid == 0)
+		{
+			if (execve(cmd, args, NULL) == -1)
+			{
+				printf("%s: No such file or directory\n", av[0]);
+			}
+		}
 		else
 		{
-			continue;
+			waitpid(child_pid, &pid_status, 0);
 		}
+
 	}
 	return (0);
 }
