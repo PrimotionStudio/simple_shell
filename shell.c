@@ -10,6 +10,7 @@ int main(void)
 		printf("OurShell $ " );
 		if (getline(&cmd, &cmdsize, stdin) == -1)
         {
+           printf("\n");
             return (0);
         }
 		cmd[strcspn(cmd, "\n")] = '\0';
