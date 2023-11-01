@@ -6,6 +6,4 @@
 #include <string.h>
 #include <unistd.h>
 
-
-
 #endif /* SHELL_H */
