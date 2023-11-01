@@ -1,5 +1,10 @@
 #include "shell.h"
 
+/* main - Entry point to simple shell project
+* @ac: number of arguments parsed
+* @av: an arry of arguments parsed
+* @en: an array of environmental variables
+*/
 int main(int ac, char **av, char *en[])
 {
 	char *cmd = NULL;
