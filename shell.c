@@ -8,7 +8,10 @@ int main(void)
 	while (1)
 	{
 		printf("OurShell $ " );
-		getline(&cmd, &cmdsize, stdin);
+		if (getline(&cmd, &cmdsize, stdin) == -1)
+        {
+            return (0);
+        }
 		cmd[strcspn(cmd, "\n")] = '\0';
 		printf("%s \n" , cmd);
 	}
