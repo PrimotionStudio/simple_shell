@@ -1,8 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "shell.h"
 
-char **_getline(char *line) {
+
+char **_getline(char *line)
+ {
 	char **words = NULL;
 	char *token = strtok(line, " ");
 	int count = 0;
@@ -26,7 +26,8 @@ char **_getline(char *line) {
 	}
 
 	words = realloc(words, (count + 1) * sizeof(char*));
-	if (words == NULL) {
+	if (words == NULL)
+    {
 		fprintf(stderr, "Memory allocation failed\n");
 		exit(EXIT_FAILURE);
 	}
