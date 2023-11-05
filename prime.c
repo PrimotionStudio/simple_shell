@@ -42,7 +42,8 @@ int main(int ac, char **av, char **en)
 			token = strtok(NULL, " ");
 			p++;
 		}
-
+		printer(p_args[0]);
+		printer("\n");
 		free(p_linecpy);
 		for (p = 0; p < p_len; p++)
 			free(p_args[p]);
