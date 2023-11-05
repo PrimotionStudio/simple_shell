@@ -9,4 +9,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+void p_ctrlc(int p_si);
+void printer(const char *str);
+size_t _strlen(char *str);
+
 #endif /* PRIME_H */

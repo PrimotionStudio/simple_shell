@@ -1,21 +1,5 @@
 #include "prime.h"
 
-size_t _strlen(char *str)
-{
-	size_t len = 0;
-
-	if (!str)
-		return (0);
-	while (str[len])
-		len++;
-	return (len);
-}
-void p_ctrlc(int p_si)
-{
-	(void)p_si;
-	printf("\n$ ");
-	fflush(stdout);
-}
 int main(int ac, char **av, char **en)
 {
 	char *p_line = NULL, *p_linecpy = NULL, *token = NULL, **p_args;
