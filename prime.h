@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+void printer(const char *str);
 void p_ctrlc(int p_si);
 char **parse_cmd(char *p_line);
 void p_exec(char **p_args);
