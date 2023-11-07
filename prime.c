@@ -3,7 +3,7 @@
 int main(int ac, char **av, char **en)
 {
 	char *p_line = NULL, *p_linecpy = NULL, *token = NULL, **p_args;
-	size_t p_linesize = 0/*, p_notoken = 0*/, p_len = 0, p, pp;
+	size_t p_linesize = 0/*, p_notoken = 0*/, p_len = 0, p, pp, nocommand = 0;
 
 	signal(SIGINT, p_ctrlc);
 	(void)ac, (void)av, (void)en;
@@ -44,6 +44,7 @@ int main(int ac, char **av, char **en)
 		}
 		printer(p_args[0]);
 		printer("\n");
+
 		free(p_linecpy);
 		for (p = 0; p < p_len; p++)
 			free(p_args[p]);
