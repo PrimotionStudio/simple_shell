@@ -1,54 +1,41 @@
 #include "prime.h"
 
-int main(int ac, char **av, char **en)
+/**
+ * main - Entry point of the shell program
+ * Return: Always returns 0
+ * Description: Displays a prompt, reads user input,
+ *		parses and executes commands.
+ */
+int main(void)
 {
-	char *p_line = NULL, *p_linecpy = NULL, *token = NULL, **p_args;
-	size_t p_linesize = 0/*, p_notoken = 0*/, p_len = 0, p, pp, nocommand = 0;
+	char *p_line = NULL, **p_args;
+	size_t p_linesize = 0;
+	ssize_t p_read_bytes;
 
 	signal(SIGINT, p_ctrlc);
-	(void)ac, (void)av, (void)en;
 	while (1)
 	{
 		printf("$ ");
-		if (getline(&p_line, &p_linesize, stdin) == -1)
-		{
-			write(1, "\n", STDOUT_FILENO);
-			exit(EXIT_FAILURE);
-		}
+		p_read_bytes = getline(&p_line, &p_linesize, stdin);
+		p_line_error(p_read_bytes, p_line);
 		p_line[strcspn(p_line, "\n")] = '\0';
-		p_len = _strlen(p_line);
-		p_linecpy = (char *)malloc(p_len + 1);
-		if (p_linecpy == NULL)
-			exit(EXIT_FAILURE);
-		for (p = 0; p < p_len; p++)
-			p_linecpy[p] = p_line[p];
-
-		/* Tokenize */
-		/* To set the tokens into the args */
-		p_args = (char **)malloc(sizeof(char *) * p_len);
-		if (p_args == NULL)
-			exit(EXIT_FAILURE);
-		p = 0;
-		token = strtok(p_linecpy, " ");
-		while (token)
+		if (p_line[0] != '\0')
 		{
-			p_args[p] = (char *)malloc(_strlen(token) + 1);
-			if (p_args[p] == NULL)
-				exit(EXIT_FAILURE);
-			p_len = 0;
-			p_len = _strlen(p_line);
-			for (pp = 0; pp < p_len; pp++)
-				p_args[p][pp] = token[pp];
-			token = strtok(NULL, " ");
-			p++;
+			p_args = parse_cmd(p_line);
+			if (p_args)
+			{
+				if (strcmp(p_args[0], "exit") == 0)
+					p_exit();
+				else if (strcmp(p_args[0], "env") == 0)
+					p_env();
+				else
+					p_exec(p_args);
+				free(p_args);
+			}
 		}
-		printer(p_args[0]);
-		printer("\n");
-
-		free(p_linecpy);
-		for (p = 0; p < p_len; p++)
-			free(p_args[p]);
-		free(p_args);
+		free(p_line);
+		p_line = NULL;
+		p_linesize = 0;
 	}
 	return (0);
 }
