@@ -15,7 +15,7 @@ int main(void)
 	signal(SIGINT, p_ctrlc);
 	while (1)
 	{
-		printf("$ ");
+		printer("$ ");
 		p_read_bytes = getline(&p_line, &p_linesize, stdin);
 		p_line_error(p_read_bytes, p_line);
 		p_line[strcspn(p_line, "\n")] = '\0';
