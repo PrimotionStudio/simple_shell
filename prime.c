@@ -1,53 +1,166 @@
 #include "prime.h"
+extern char **environ;
 
-int main(int ac, char **av, char **en)
+/**
+ * p_ctrlc - Handles the SIGINT signal (Ctrl+C) to prevent termination
+ * @p_si: Signal number (unused)
+ *
+ * Description: Prints a new line and prompts the user for input.
+ */
+void p_ctrlc(int p_si)
 {
-	char *p_line = NULL, *p_linecpy = NULL, *token = NULL, **p_args;
-	size_t p_linesize = 0/*, p_notoken = 0*/, p_len = 0, p, pp;
-
-	signal(SIGINT, p_ctrlc);
-	(void)ac, (void)av, (void)en;
-	while (1)
-	{
-		printf("$ ");
-		if (getline(&p_line, &p_linesize, stdin) == -1)
-		{
-			write(1, "\n", STDOUT_FILENO);
-			exit(EXIT_FAILURE);
-		}
-		p_line[strcspn(p_line, "\n")] = '\0';
-		p_len = _strlen(p_line);
-		p_linecpy = (char *)malloc(p_len + 1);
-		if (p_linecpy == NULL)
-			exit(EXIT_FAILURE);
-		for (p = 0; p < p_len; p++)
-			p_linecpy[p] = p_line[p];
-
-		/* Tokenize */
-		/* To set the tokens into the args */
-		p_args = (char **)malloc(sizeof(char *) * p_len);
-		if (p_args == NULL)
-			exit(EXIT_FAILURE);
-		p = 0;
-		token = strtok(p_linecpy, " ");
-		while (token)
-		{
-			p_args[p] = (char *)malloc(_strlen(token) + 1);
-			if (p_args[p] == NULL)
-				exit(EXIT_FAILURE);
-			p_len = 0;
-			p_len = _strlen(p_line);
-			for (pp = 0; pp < p_len; pp++)
-				p_args[p][pp] = token[pp];
-			token = strtok(NULL, " ");
-			p++;
-		}
-		printer(p_args[0]);
-		printer("\n");
-		free(p_linecpy);
-		for (p = 0; p < p_len; p++)
-			free(p_args[p]);
-		free(p_args);
-	}
-	return (0);
+    (void)p_si;
+    printf("\n$ ");
+    fflush(stdout);
 }
+
+/**
+ * parse_command - Parses the input command line into individual arguments
+ * @line: The input command line string
+ *
+ * Return: An array of strings containing individual arguments.
+ *         NULL on failure.
+ *
+ * Description: Tokenizes the input line using space as the delimiter.
+ *              Allocates memory for arguments and copies tokens.
+ */
+char **parse_command(char *line)
+{
+     char **args = NULL;
+    char *token = NULL;
+    size_t p = 0;
+
+    args = malloc(sizeof(char *) * 64);
+    if (args == NULL) {
+        perror("Memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok(line, " ");
+    while (token != NULL) {
+        args[p] = strdup(token);
+        if (args[p] == NULL) {
+            perror("Memory allocation error");
+            exit(EXIT_FAILURE);
+        }
+        token = strtok(NULL, " ");
+        p++;
+    }
+    args[p] = NULL;
+
+    return args;
+}
+
+/**
+ * execute_command - Executes the given command with arguments
+ * @args: An array of strings containing the command and its arguments
+ *
+ * Description: Forks a child process to execute the specified command.
+ *              Handles command execution and error messages.
+ */
+void execute_command(char **args)
+{
+    pid_t pid;
+    int status;
+
+    pid = fork();
+    if (pid == -1) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        if (execvp(args[0], args) == -1) {
+            perror("execvp");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        waitpid(pid, &status, 0);
+    }
+}
+
+/**
+ * built_in_exit - Handles the built-in 'exit' command
+ *
+ * Description: Exits the shell.
+ */
+void built_in_exit(void)
+{
+    printf("Exiting shell\n");
+    exit(EXIT_SUCCESS);
+}
+
+/**
+ * built_in_env - Handles the built-in 'env' command
+ *
+ * Description: Prints the current environment variables.
+ */
+void built_in_env(void)
+{
+   char **env = environ;
+    while (*env != NULL) {
+        printf("%s\n", *env);
+        env++;
+    }
+}
+
+/**
+ * main - Entry point of the shell program
+ * Return: Always returns 0
+ *
+ * Description: Displays a prompt, reads user input, parses and executes commands.
+ */
+int main(void)
+{
+    char *line = NULL;
+    size_t linesize = 0;
+    ssize_t read_bytes;
+    char **args;
+
+    signal(SIGINT, p_ctrlc);
+
+    while (1)
+    {
+        printf("$ ");
+        read_bytes = getline(&line, &linesize, stdin);
+
+        if (read_bytes == -1)
+        {
+            if (feof(stdin))
+            {
+                printf("\n");
+                free(line);
+                exit(EXIT_SUCCESS);
+            }
+            else
+            {
+                perror("getline");
+                free(line);
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        line[strcspn(line, "\n")] = '\0';
+
+        if (line[0] != '\0')
+        {
+            args = parse_command(line);
+            if (args)
+            {
+                if (strcmp(args[0], "exit") == 0) {
+                    built_in_exit();
+                } else if (strcmp(args[0], "env") == 0) {
+                    built_in_env();
+                } else {
+                    execute_command(args);
+                }
+                free(args);
+            }
+        }
+
+        free(line);
+        line = NULL;
+        linesize = 0;
+    }
+
+    return 0;
+}
+
