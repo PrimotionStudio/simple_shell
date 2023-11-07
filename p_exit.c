@@ -6,6 +6,6 @@
  */
 void p_exit(void)
 {
-	printf("Exiting shell\n");
+	printer("Exiting shell\n");
 	exit(EXIT_SUCCESS);
 }
