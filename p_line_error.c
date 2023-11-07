@@ -11,7 +11,7 @@ void p_line_error(int p_read_bytes, char *p_line)
 	{
 		if (feof(stdin))
 		{
-			printf("\n");
+			printer("\n");
 			free(p_line);
 			exit(EXIT_SUCCESS);
 		}
