@@ -10,7 +10,7 @@ void p_env(void)
 
 	while (*penv != NULL)
 	{
-		printf("%s\n", *penv);
+		printer(*penv);
 		penv++;
 	}
 }

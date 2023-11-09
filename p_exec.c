@@ -21,7 +21,7 @@ void p_exec(char **p_args)
 	{
 		if (execvp(p_args[0], p_args) == -1)
 		{
-			perror("execvp");
+			perror(p_args[0]);
 			exit(EXIT_FAILURE);
 		}
 	}
