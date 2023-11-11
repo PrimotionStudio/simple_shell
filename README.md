@@ -1,6 +1,4 @@
-Certainly! Here's a detailed README for your custom `simple_shell`:
-
-# Custom Simple Shell
+# ALX Simple Shell Group Project
 
 **Authors:**
 - Martins Obomate Okanlawon - [GitHub Profile](https://github.com/PrimotionStudio)
@@ -8,7 +6,7 @@ Certainly! Here's a detailed README for your custom `simple_shell`:
 
 ## Description
 
-The Custom Simple Shell is a minimalist Unix-like shell created to replicate the functionality of the existing `/bin/sh`. It provides a basic command-line interface that allows users to interact with the system. This shell is designed to handle simple commands with limited features. Below are the core functionalities and features of this custom shell:
+This Simple Shell is a minimalist Unix-like shell created to replicate the functionality of the existing `/bin/sh`. It provides a basic command-line interface that allows users to interact with the system. This shell is designed to handle simple commands with limited features. Below are the core functionalities and features of this custom shell:
 
 ### Features
 
