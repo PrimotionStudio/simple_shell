@@ -15,7 +15,7 @@ void p_exec(char **p_args);
 void p_env(void);
 void p_exit(void);
 void p_line_error(int p_read_bytes, char *p_line);
-
+char *_strtok(char *str, char *delim);
 extern char **environ;
 
 #endif /* SHELL_PRIME_H */
