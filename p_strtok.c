@@ -4,7 +4,7 @@ char *_strtok(char *str, char *delim)
 {
 	static char *remaining = NULL;
 	char *newstr = NULL;
-	int j = 0, m = 0, i = 0 n = 0, o = 0;
+	int j = 0, m = 0, i = 0, n = 0, o = 0;
 
 	if (!str)
 	{
