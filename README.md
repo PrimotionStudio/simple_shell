@@ -40,7 +40,7 @@ This Simple Shell is a minimalist Unix-like shell created to replicate the funct
 
 ### Examples
 
-Here are a few examples of how to use the custom simple shell:
+Here are a few examples of how to use the simple shell:
 
 1. Running a simple command:
 
@@ -87,7 +87,7 @@ Here are a few examples of how to use the custom simple shell:
 
 ## Dependencies
 
-This custom simple shell has no external dependencies. It is designed to work on Unix-like systems.
+This simple shell has no external dependencies. It is designed to work on Unix-like systems.
 
 ## Limitations
 
@@ -96,13 +96,13 @@ This custom simple shell has no external dependencies. It is designed to work on
 
 ## License
 
-This custom simple shell is open-source and released under the MIT License. You are free to use, modify, and distribute it according to the terms of the license.
+This simple shell is open-source and released under the MIT License. You are free to use, modify, and distribute it according to the terms of the license.
 
 ## Contribution
 
-If you would like to contribute to the development of this custom simple shell, please create a pull request on the GitHub repository. We welcome contributions and improvements.
+If you would like to contribute to the development of this simple shell, please create a pull request on the GitHub repository. We welcome contributions and improvements.
 
-Feel free to contact the authors for any questions or issues related to the custom simple shell.
+Feel free to contact the authors for any questions or issues related to the simple shell.
 
 ## Contact Information
 
