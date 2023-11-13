@@ -16,17 +16,17 @@ int main(void)
 	while (1)
 	{
 		printer("$ ");
-		p_read_bytes = getline(&p_line, &p_linesize, stdin);
+		p_read_bytes = _getline(&p_line, &p_linesize, stdin);
 		p_line_error(p_read_bytes, p_line);
-		p_line[strcspn(p_line, "\n")] = '\0';
+		p_line[_strcspn(p_line, "\n")] = '\0';
 		if (p_line[0] != '\0')
 		{
 			p_args = parse_cmd(p_line);
 			if (p_args)
 			{
-				if (strcmp(p_args[0], "exit") == 0)
+				if (_strcmp(p_args[0], "exit") == 0)
 					p_exit();
-				else if (strcmp(p_args[0], "env") == 0)
+				else if (_strcmp(p_args[0], "env") == 0)
 					p_env();
 				else
 					p_exec(p_args);

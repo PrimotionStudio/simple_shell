@@ -17,7 +17,7 @@ void p_line_error(int p_read_bytes, char *p_line)
 		}
 		else
 		{
-			perror("getline");
+			printer("\n");
 			free(p_line);
 			exit(EXIT_FAILURE);
 		}
