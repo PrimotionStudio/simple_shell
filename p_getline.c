@@ -73,6 +73,12 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *fd)
 		if (buffer_index >= chars_read)
 		{
 			chars_read = read_buffer(buffer, BUFFER_SIZE, fd);
+			if (chars_read <= 0)
+			{
+				if (i == 0 && chars_read <= 0)
+					return (-1);
+				return (i);
+			}
 			buffer_index = 0;
 		}
 		for (; buffer_index < chars_read; ++buffer_index)
