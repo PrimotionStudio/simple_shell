@@ -107,4 +107,4 @@ Feel free to contact the authors for any questions or issues related to the simp
 ## Contact Information
 
 - Martins Obomate Okanlawon: [oyedelenewton@gmail.com](mailto:oyedelenewton@gmail.com)
-- Prosper Abudu: [proabudu@gmail.com](mailto:proabudu@gmail.com)
+- Prosper Abudu: [abuduprosperyao@gmail.com](abuduprosperyao@gmail.com)
