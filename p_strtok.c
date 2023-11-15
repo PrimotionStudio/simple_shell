@@ -1,8 +1,14 @@
 #include "prime.h"
 
+/**
+  * _strtok - A replacement for strtok
+  * @str: The string to tokenize
+  * @delim: The delimiter
+  * Return: The new string
+  */
 char *_strtok(char *str, char *delim)
 {
-	static char *remaining = NULL;
+	static char *remaining;
 	char *newstr = NULL;
 	int j = 0, m = 0, i = 0, n = 0, o = 0;
 
@@ -39,5 +45,5 @@ char *_strtok(char *str, char *delim)
 		o++;
 	}
 	remaining[o] = '\0';
-	return(newstr);
+	return (newstr);
 }

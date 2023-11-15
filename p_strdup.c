@@ -1,9 +1,15 @@
 #include "prime.h"
 
+/**
+  * _strdup - Replacement for strdup
+  * @source: The string
+  * Return: The duplicate
+  */
 char *_strdup(const char *source)
 {
 	int length = 0, i = 0;
 	char *duplicate = NULL;
+
 	while (source[length] != '\0')
 		length++;
 

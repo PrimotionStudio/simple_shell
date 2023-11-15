@@ -1,7 +1,7 @@
 #include "prime.h"
 
 /**
- * p_line_error: handle error if line could not be read
+ * p_line_error - handle error if line could not be read
  * @p_read_bytes: The bytes to read
  * @p_line: THe full line
  */
