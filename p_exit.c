@@ -6,6 +6,5 @@
  */
 void p_exit(void)
 {
-	printer("Exiting shell\n");
 	exit(EXIT_SUCCESS);
 }

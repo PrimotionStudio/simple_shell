@@ -20,16 +20,16 @@ char **parse_cmd(char *p_line)
 		perror("Memory allocation error");
 		exit(EXIT_FAILURE);
 	}
-	p_token = strtok(p_line, " ");
+	p_token = _strtok(p_line, " ");
 	while (p_token != NULL)
 	{
-		p_args[p] = strdup(p_token);
+		p_args[p] = _strdup(p_token);
 		if (p_args[p] == NULL)
 		{
 			perror("Memory allocation error");
 			exit(EXIT_FAILURE);
 		}
-		p_token = strtok(NULL, " ");
+		p_token = _strtok(NULL, " ");
 		p++;
 	}
 	p_args[p] = NULL;
