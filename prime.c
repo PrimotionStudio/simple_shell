@@ -1,41 +1,43 @@
 #include "prime.h"
 
 /**
- * main - Entry point of the shell program
- * Return: Always returns 0
- * Description: Displays a prompt, reads user input,
- *		parses and executes commands.
+ * main - The prime shell
+ * @ac: no of aruments
+ * @av: array of arguments
+ * Return: 0, 1
  */
-int main(void)
+int main(int ac, char **av)
 {
-	char *p_line = NULL, **p_args;
-	size_t p_linesize = 0;
-	ssize_t p_read_bytes;
+	info_t p_args[] = { INFO_INIT };
+	int fd = 2;
 
-	signal(SIGINT, p_ctrlc);
-	while (1)
+	asm ("mov %1, %0\n\t"
+			"add $3, %0"
+			: "=r" (fd)
+			: "r" (fd));
+
+	if (ac == 2)
 	{
-		printer("$ ");
-		p_read_bytes = _getline(&p_line, &p_linesize, stdin);
-		p_line_error(p_read_bytes, p_line);
-		p_line[_strcspn(p_line, "\n")] = '\0';
-		if (p_line[0] != '\0')
+		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
 		{
-			p_args = parse_cmd(p_line);
-			if (p_args)
+			if (errno == EACCES)
+				exit(126);
+			if (errno == ENOENT)
 			{
-				if (_strcmp(p_args[0], "exit") == 0)
-					p_exit();
-				else if (_strcmp(p_args[0], "env") == 0)
-					p_env();
-				else
-					p_exec(p_args);
-				free(p_args);
+				p_eputs(av[0]);
+				p_eputs(": 0: Can't open ");
+				p_eputs(av[1]);
+				p_eputchar('\n');
+				p_eputchar(BUF_FLUSH);
+				exit(127);
 			}
+			return (EXIT_FAILURE);
 		}
-		free(p_line);
-		p_line = NULL;
-		p_linesize = 0;
+		p_args->readfd = fd;
 	}
-	return (0);
+	p_set_env_list(p_args);
+	p_read_history(p_args);
+	p_shell(p_args, av);
+	return (EXIT_SUCCESS);
 }
