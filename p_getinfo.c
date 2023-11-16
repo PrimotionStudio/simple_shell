@@ -38,8 +38,8 @@ void p_set_info(info_t *p_info, char **av)
 			;
 		p_info->argc = i;
 
-		replace_alias(p_info);
-		replace_vars(p_info);
+		p_replace_alias(p_info);
+		p_replace_vars(p_info);
 	}
 }
 

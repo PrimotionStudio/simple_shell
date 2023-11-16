@@ -9,7 +9,7 @@ char **p__getenv(info_t *p_args)
 {
 	if (!p_args->environ || p_args->env_changed)
 	{
-		p_args->environ = list_to_strings(p_args->env);
+		p_args->environ = p_list_strings(p_args->env);
 		p_args->env_changed = 0;
 	}
 	return (p_args->environ);

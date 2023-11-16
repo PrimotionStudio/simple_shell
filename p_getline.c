@@ -64,10 +64,10 @@ ssize_t p_get_input(info_t *p_args)
 		j = i;
 		p = buffer + i;
 
-		check_chain(p_args, buffer, &j, i, len);
+		p_check_chain(p_args, buffer, &j, i, len);
 		while (j < len)
 		{
-			if (is_chain(p_args, buffer, &j))
+			if (p_is_chain(p_args, buffer, &j))
 				break;
 			j++;
 		}
@@ -92,7 +92,6 @@ ssize_t p_get_input(info_t *p_args)
  * @info: parameter struct
  * @buf: buffer
  * @i: size
- *
  * Return: r
  */
 ssize_t read_buf(info_t *info, char *buf, size_t *i)

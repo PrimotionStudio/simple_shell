@@ -169,15 +169,15 @@ list_t *p_add_node_end(list_t **, const char *, int);
 size_t print_list_str(const list_t *);
 int p_delete_node(list_t **, unsigned int);
 void p_free_list(list_t **);
-size_t list_len(const list_t *);
-char **list_to_strings(list_t *);
+size_t p_list_len(const list_t *);
+char **p_list_strings(list_t *);
 size_t print_list(const list_t *);
-list_t *node_starts_with(list_t *, char *, char);
-ssize_t get_node_index(list_t *, list_t *);
-int is_chain(info_t *, char *, size_t *);
-void check_chain(info_t *, char *, size_t *, size_t, size_t);
-int replace_alias(info_t *);
-int replace_vars(info_t *);
-int replace_string(char **, char *);
+list_t *p_startnode(list_t *, char *, char);
+ssize_t p_get_node(list_t *, list_t *);
+int p_is_chain(info_t *, char *, size_t *);
+void p_check_chain(info_t *, char *, size_t *, size_t, size_t);
+int p_replace_alias(info_t *);
+int p_replace_vars(info_t *);
+int p_replace_string(char **, char *);
 
 #endif
