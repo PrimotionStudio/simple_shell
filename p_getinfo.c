@@ -45,7 +45,7 @@ void p_set_info(info_t *p_info, char **av)
 
 /**
  * p_free_info - frees info_t
- * @p_argso: structure
+ * @p_args: structure
  * @p_all: to free all
  */
 void p_free_info(info_t *p_args, int p_all)

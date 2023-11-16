@@ -16,7 +16,8 @@ char **_strtok(char *p_str, char *p_delim)
 	if (!p_delim)
 		p_delim = " ";
 	for (i = 0; p_str[i] != '\0'; i++)
-		if (!p_isdelim(p_str[i], p_delim) && (p_isdelim(p_str[i + 1], p_delim) || !p_str[i + 1]))
+		if (!p_isdelim(p_str[i], p_delim) && (p_isdelim(p_str[i + 1],
+			p_delim) || !p_str[i + 1]))
 			numwords++;
 
 	if (numwords == 0)

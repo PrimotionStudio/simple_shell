@@ -102,14 +102,13 @@ char *p_iota(long int p_int, int p_base, int p_flag)
 	{
 		i = -p_int;
 		p_sign = '-';
-
 	}
-	p_array = p_flag & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	p_array = p_flag & CONVERT_LOWERCASE ?
+		"0123456789abcdef" : "0123456789ABCDEF";
 	pointer = &p_buf[49];
 	*pointer = '\0';
 
-	do
-	{
+	do	{
 		*--pointer = p_array[i % p_base];
 		i /= p_base;
 	} while (i != 0);
