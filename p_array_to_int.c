@@ -1,26 +1,25 @@
 #include "prime.h"
 
 /**
- * interactive - returns true if shell is interactive mode
- * @info: struct address
- *
- * Return: 1 if interactive mode, 0 otherwise
+ * p_interact - Used to check if the shell is interactive
+ * @p_info: structure
+ * Return: 1
  */
-int interactive(info_t *info)
+int p_interact(info_t *p_info)
 {
-	return (isatty(STDIN_FILENO) && info->readfd <= 2);
+	return (isatty(STDIN_FILENO) && p_info->readfd <= 2);
 }
 
 /**
- * is_delim - checks if character is a delimeter
- * @c: the char to check
- * @delim: the delimeter string
- * Return: 1 if true, 0 if false
+ * p_isdelim - checks for a delimeter
+ * @p: the char
+ * @p_delim: the delim
+ * Return: 1, 0
  */
-int is_delim(char c, char *delim)
+int p_isdelim(char p, char *p_delim)
 {
-	while (*delim)
-		if (*delim++ == c)
+	while (*p_delim)
+		if (*p_delim++ == p)
 			return (1);
 	return (0);
 }

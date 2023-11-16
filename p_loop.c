@@ -1,156 +1,150 @@
 #include "prime.h"
 
 /**
- * hsh - main shell loop
- * @info: the parameter & return info struct
- * @av: the argument vector from main()
- *
- * Return: 0 on success, 1 on error, or error code
+ * p_shell - custome shell loop
+ * @p_info: the info structur
+ * @av: the argv
+ * Return: 0, 1
  */
-int hsh(info_t *info, char **av)
+int p_shell(info_t *p_info, char **av)
 {
 	ssize_t r = 0;
 	int builtin_ret = 0;
 
 	while (r != -1 && builtin_ret != -2)
 	{
-		clear_info(info);
-		if (interactive(info))
+		p_clear_info(p_info);
+		if (p_interact(p_info))
 			_puts("$ ");
-		_eputchar(BUF_FLUSH);
-		r = get_input(info);
+		p_eputchar(BUF_FLUSH);
+		r = p_get_input(p_info);
 		if (r != -1)
 		{
-			set_info(info, av);
-			builtin_ret = find_builtin(info);
+			p_set_info(p_info, av);
+			builtin_ret = p_get_builtin(p_info);
 			if (builtin_ret == -1)
-				find_cmd(info);
+				p_get_cmd(p_info);
 		}
-		else if (interactive(info))
+		else if (p_interact(p_info))
 			_putchar('\n');
-		free_info(info, 0);
+		p_free_info(p_info, 0);
 	}
-	write_history(info);
-	free_info(info, 1);
-	if (!interactive(info) && info->status)
-		exit(info->status);
+	p_write_history(p_info);
+	p_free_info(p_info, 1);
+	if (!p_interact(p_info) && p_info->status)
+		exit(p_info->status);
 	if (builtin_ret == -2)
 	{
-		if (info->err_num == -1)
-			exit(info->status);
-		exit(info->err_num);
+		if (p_info->err_num == -1)
+			exit(p_info->status);
+		exit(p_info->err_num);
 	}
 	return (builtin_ret);
 }
 
 /**
- * find_builtin - finds a builtin command
- * @info: the parameter & return info struct
+ * p_get_builtin - gets a builtin command
+ * @p_info: the info structuer
  * Return: -1, 0, 1, 2
  */
-int find_builtin(info_t *info)
+int p_get_builtin(info_t *p_info)
 {
 	int i, built_in_ret = -1;
 	builtin_table builtintbl[] = {
-		{"exit", _myexit},
-		{"env", _myenv},
-		{"help", _myhelp},
-		{"history", _myhistory},
-		{"setenv", _mysetenv},
-		{"unsetenv", _myunsetenv},
-		{"cd", _mycd},
-		{"alias", _myalias},
+		{"exit", p_exit},
+		{"env", p_env},
+		{"help", p_help},
+		{"history", p_history},
+		{"setenv", p_setenv},
+		{"unsetenv", p_unsetenv},
+		{"cd", p_cd},
+		{"alias", p_alias},
 		{NULL, NULL}
 	};
 
 	for (i = 0; builtintbl[i].type; i++)
-		if (_strcmp(info->argv[0], builtintbl[i].type) == 0)
+		if (_strcmp(p_info->argv[0], builtintbl[i].type) == 0)
 		{
-			info->line_count++;
-			built_in_ret = builtintbl[i].func(info);
+			p_info->line_count++;
+			built_in_ret = builtintbl[i].func(p_info);
 			break;
 		}
 	return (built_in_ret);
 }
 
 /**
- * find_cmd - finds a command in PATH
- * @info: the parameter & return info struct
- *
+ * p_get_cmd - finds a path for a command
+ * @p_info: info structure
  * Return: void
  */
-void find_cmd(info_t *info)
+void p_get_cmd(info_t *p_info)
 {
 	char *path = NULL;
 	int i, k;
 
-	info->path = info->argv[0];
-	if (info->linecount_flag == 1)
+	p_info->path = p_info->argv[0];
+	if (p_info->linecount_flag == 1)
 	{
-		info->line_count++;
-		info->linecount_flag = 0;
+		p_info->line_count++;
+		p_info->linecount_flag = 0;
 	}
-	for (i = 0, k = 0; info->arg[i]; i++)
-		if (!is_delim(info->arg[i], " \t\n"))
+	for (i = 0, k = 0; p_info->arg[i]; i++)
+		if (!p_isdelim(p_info->arg[i], " \t\n"))
 			k++;
 	if (!k)
 		return;
 
-	path = find_path(info, _getenv(info, "PATH="), info->argv[0]);
+	path = p_get_path(p_info, p_getenv(p_info, "PATH="), p_info->argv[0]);
 	if (path)
 	{
-		info->path = path;
-		fork_cmd(info);
+		p_info->path = path;
+		p_fork_cmd(p_info);
 	}
 	else
 	{
-		if ((interactive(info) || _getenv(info, "PATH=")
-					|| info->argv[0][0] == '/') && is_cmd(info, info->argv[0]))
-			fork_cmd(info);
-		else if (*(info->arg) != '\n')
+		if ((p_interact(p_info) || p_getenv(p_info, "PATH=")
+					|| p_info->argv[0][0] == '/') && p_is_cmd(p_info, p_info->argv[0]))
+			p_fork_cmd(p_info);
+		else if (*(p_info->arg) != '\n')
 		{
-			info->status = 127;
-			print_error(info, "not found\n");
+			p_info->status = 127;
+			print_error(p_info, "not found\n");
 		}
 	}
 }
 
 /**
- * fork_cmd - forks a an exec thread to run cmd
- * @info: the parameter & return info struct
- *
- * Return: void
+ * p_fork_cmd - Starts shild process
+ * @p_info: info structure
  */
-void fork_cmd(info_t *info)
+void p_fork_cmd(info_t *p_info)
 {
 	pid_t child_pid;
 
 	child_pid = fork();
 	if (child_pid == -1)
 	{
-		/* TODO: PUT ERROR FUNCTION */
 		perror("Error:");
 		return;
 	}
 	if (child_pid == 0)
 	{
-		if (execve(info->path, info->argv, get_environ(info)) == -1)
+		if (execve(p_info->path, p_info->argv, p__getenv(p_info)) == -1)
 		{
-			free_info(info, 1);
+			p_free_info(p_info, 1);
 			if (errno == EACCES)
 				exit(126);
 			exit(1);
 		}
-		/* TODO: PUT ERROR FUNCTION */
 	}
 	else
 	{
-		wait(&(info->status));
-		if (WIFEXITED(info->status))
+		wait(&(p_info->status));
+		if (WIFEXITED(p_info->status))
 		{
-			info->status = WEXITSTATUS(info->status);
-			if (info->status == 126)
-				print_error(info, "Permission denied\n");
+			p_info->status = WEXITSTATUS(p_info->status);
+			if (p_info->status == 126)
+				print_error(p_info, "Permission denied\n");
 		}
 	}
 }

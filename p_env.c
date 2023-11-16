@@ -1,92 +1,86 @@
 #include "prime.h"
 
 /**
- * _myenv - prints the current environment
- * @info: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
- * Return: Always 0
+ * p_env - prints env
+ * @p_args: arguments
+ * Return: 0
  */
-int _myenv(info_t *info)
+int p_env(info_t *p_args)
 {
-	print_list_str(info->env);
+	print_list_str(p_args->env);
 	return (0);
 }
 
 /**
- * _getenv - gets the value of an environ variable
- * @info: Structure containing potential arguments. Used to maintain
- * @name: env var name
- *
- * Return: the value
+ * p_getenv - gets an env value
+ * @p_args: arguments
+ * @en: EN name
+ * Return: en value
  */
-char *_getenv(info_t *info, const char *name)
+char *p_getenv(info_t *p_args, const char *en)
 {
-	list_t *node = info->env;
+	list_t *new = p_args->env;
 	char *p;
 
-	while (node)
+	while (new)
 	{
-		p = starts_with(node->str, name);
+		p = p_starts(new->str, en);
 		if (p && *p)
 			return (p);
-		node = node->next;
+		new = new->next;
 	}
 	return (NULL);
 }
 
 /**
- * _mysetenv - Initialize a new environment variable,
- *             or modify an existing one
- * @info: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
- *  Return: Always 0
+ * p_setenv - Sets and env value
+ * @p_args: arguments
+ *  Return: 0
  */
-int _mysetenv(info_t *info)
+int p_setenv(info_t *p_args)
 {
-	if (info->argc != 3)
+	if (p_args->argc != 3)
 	{
-		_eputs("Incorrect number of arguements\n");
+		p_eputs("Incorrect number of arguements\n");
 		return (1);
 	}
-	if (_setenv(info, info->argv[1], info->argv[2]))
+	if (p__setenv(p_args, p_args->argv[1], p_args->argv[2]))
 		return (0);
 	return (1);
 }
 
 /**
- * _myunsetenv - Remove an environment variable
- * @info: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
- * Return: Always 0
+ * p_unsetenv - Unsets an env
+ * @p_args: arguments
+ * Return: 0
  */
-int _myunsetenv(info_t *info)
+int p_unsetenv(info_t *p_args)
 {
-	int i;
+	int p;
 
-	if (info->argc == 1)
+	if (p_args->argc == 1)
 	{
-		_eputs("Too few arguements.\n");
+		p_eputs("Too few arguements.\n");
 		return (1);
 	}
-	for (i = 1; i <= info->argc; i++)
-		_unsetenv(info, info->argv[i]);
+	for (p = 1; p <= p_args->argc; p++)
+		p__unsetenv(p_args, p_args->argv[p]);
 
 	return (0);
 }
 
 /**
- * populate_env_list - populates env linked list
- * @info: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
- * Return: Always 0
+ * p_set_env_list - sets env linked list
+ * @p_args: arguments
+ * Return: 0
  */
-int populate_env_list(info_t *info)
+int p_set_env_list(info_t *p_args)
 {
-	list_t *node = NULL;
-	size_t i;
+	list_t *new = NULL;
+	size_t p;
 
-	for (i = 0; environ[i]; i++)
-		add_node_end(&node, environ[i], 0);
-	info->env = node;
+	for (p = 0; environ[p]; p++)
+		p_add_node_end(&new, environ[p], 0);
+	p_args->env = new;
 	return (0);
 }

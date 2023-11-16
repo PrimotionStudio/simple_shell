@@ -1,17 +1,16 @@
 #include "prime.h"
 
 /**
- * bfree - frees a pointer and NULLs the address
- * @ptr: address of the pointer to free
- *
- * Return: 1 if freed, otherwise 0.
+ * p_null_free - frees an address and NULLs the pointer (opposite)
+ * @pointer: address
+ * Return: 1, 0
  */
-int bfree(void **ptr)
+int p_null_free(void **pointer)
 {
-	if (ptr && *ptr)
+	if (pointer && *pointer)
 	{
-		free(*ptr);
-		*ptr = NULL;
+		free(*pointer);
+		*pointer = NULL;
 		return (1);
 	}
 	return (0);

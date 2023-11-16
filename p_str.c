@@ -41,18 +41,17 @@ int _strcmp(char *s1, char *s2)
 }
 
 /**
- * starts_with - checks if needle starts with haystack
- * @haystack: string to search
- * @needle: the substring to find
- *
- * Return: address of next char of haystack or NULL
+ * p_starts - checks if a string starts with a token
+ * @string: the string
+ * @token: the token
+ * Return: next token or NULL
  */
-char *starts_with(const char *haystack, const char *needle)
+char *p_starts(const char *string, const char *token)
 {
-	while (*needle)
-		if (*needle++ != *haystack++)
+	while (*token)
+		if (*token++ != *string++)
 			return (NULL);
-	return ((char *)haystack);
+	return ((char *)string);
 }
 
 /**

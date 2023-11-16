@@ -1,33 +1,33 @@
 #include "prime.h"
 
 /**
- * _memset - fills memory with a constant byte
- * @s: the pointer to the memory area
- * @b: the byte to fill *s with
- * @n: the amount of bytes to be filled
- * Return: (s) a pointer to the memory area s
+ * p_set_mem - enters in memory with a specifc byte
+ * @p_value: the memory
+ * @p_bytes: the byts
+ * @p_no: the amount
+ * Return: memory used
  */
-char *_memset(char *s, char b, unsigned int n)
+char *p_set_mem(char *p_value, char p_bytes, unsigned int p_no)
 {
 	unsigned int i;
 
-	for (i = 0; i < n; i++)
-		s[i] = b;
-	return (s);
+	for (i = 0; i < p_no; i++)
+		p_value[i] = p_bytes;
+	return (p_value);
 }
 
 /**
- * ffree - frees a string of strings
- * @pp: string of strings
+ * p_free - frees an array of str
+ * @p_arr: array of strings
  */
-void ffree(char **pp)
+void p_free(char **p_arr)
 {
-	char **a = pp;
+	char **a = p_arr;
 
-	if (!pp)
+	if (!p_arr)
 		return;
-	while (*pp)
-		free(*pp++);
+	while (*p_arr)
+		free(*p_arr++);
 	free(a);
 }
 

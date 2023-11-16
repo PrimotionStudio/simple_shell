@@ -1,93 +1,88 @@
 #include "prime.h"
 
 /**
- * get_environ - returns the string array copy of our environ
- * @info: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
- * Return: Always 0
+ * p__getenv - returns a string of the env
+ * @p_args: arguments
+ * Return: 0
  */
-char **get_environ(info_t *info)
+char **p__getenv(info_t *p_args)
 {
-	if (!info->environ || info->env_changed)
+	if (!p_args->environ || p_args->env_changed)
 	{
-		info->environ = list_to_strings(info->env);
-		info->env_changed = 0;
+		p_args->environ = list_to_strings(p_args->env);
+		p_args->env_changed = 0;
 	}
-
-	return (info->environ);
+	return (p_args->environ);
 }
 
 /**
- * _unsetenv - Remove an environment variable
- * @info: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
- *  Return: 1 on delete, 0 otherwise
- * @var: the string env var property
+ * p__unsetenv - Unsets env
+ * @p_args: arguments
+ * @p_en: the env
+ * Return: 1, 0
  */
-int _unsetenv(info_t *info, char *var)
+int p__unsetenv(info_t *p_args, char *p_en)
 {
-	list_t *node = info->env;
+	list_t *new = p_args->env;
 	size_t i = 0;
 	char *p;
 
-	if (!node || !var)
+	if (!new || !p_en)
 		return (0);
 
-	while (node)
+	while (new)
 	{
-		p = starts_with(node->str, var);
+		p = p_starts(new->str, p_en);
 		if (p && *p == '=')
 		{
-			info->env_changed = delete_node_at_index(&(info->env), i);
+			p_args->env_changed = p_delete_node(&(p_args->env), i);
 			i = 0;
-			node = info->env;
+			new = p_args->env;
 			continue;
 		}
-		node = node->next;
+		new = new->next;
 		i++;
 	}
-	return (info->env_changed);
+	return (p_args->env_changed);
 }
 
 /**
- * _setenv - Initialize a new environment variable,
- *             or modify an existing one
- * @info: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
- * @var: the string env var property
- * @value: the string env var value
- *  Return: Always 0
+ * p__setenv - Initialize an env
+ * @p_args: arguments
+ * @en: the env name
+ * @val: the env value
+ * Return: 0
  */
-int _setenv(info_t *info, char *var, char *value)
+int p__setenv(info_t *p_args, char *en, char *val)
 {
-	char *buf = NULL;
-	list_t *node;
+	char *buffer = NULL;
+	list_t *new;
 	char *p;
 
-	if (!var || !value)
+	if (!en || !val)
 		return (0);
 
-	buf = malloc(_strlen(var) + _strlen(value) + 2);
-	if (!buf)
+	buffer = malloc(_strlen(en) + _strlen(val) + 2);
+	if (!buffer)
 		return (1);
-	_strcpy(buf, var);
-	_strcat(buf, "=");
-	_strcat(buf, value);
-	node = info->env;
-	while (node)
+	_strcpy(buffer, en);
+	_strcat(buffer, "=");
+	_strcat(buffer, val);
+	new = p_args->env;
+	while (new)
 	{
-		p = starts_with(node->str, var);
+		p = p_starts(new->str, en);
 		if (p && *p == '=')
 		{
-			free(node->str);
-			node->str = buf;
-			info->env_changed = 1;
+			free(new->str);
+			new->str = buffer;
+			p_args->env_changed = 1;
 			return (0);
 		}
-		node = node->next;
+		new = new->next;
 	}
-	add_node_end(&(info->env), buf, 0);
-	free(buf);
-	info->env_changed = 1;
+	p_add_node_end(&(p_args->env), buffer, 0);
+	free(buffer);
+	p_args->env_changed = 1;
 	return (0);
 }

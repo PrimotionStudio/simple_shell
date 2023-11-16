@@ -1,24 +1,23 @@
 #include "prime.h"
 
 /**
- * _erratoi - converts a string to an integer
- * @s: the string to be converted
- * Return: 0 if no numbers in string, converted number otherwise
- *       -1 on error
+ * p_atoi_error - converts a str to int gracefully
+ * @p_str: the str
+ * Return: 0, -1
  */
-int _erratoi(char *s)
+int p_atoi_error(char *p_str)
 {
 	int i = 0;
 	unsigned long int result = 0;
 
-	if (*s == '+')
-		s++;  /* TODO: why does this make main return 255? */
-	for (i = 0;  s[i] != '\0'; i++)
+	if (*p_str == '+')
+		p_str++;
+	for (i = 0;  p_str[i] != '\0'; i++)
 	{
-		if (s[i] >= '0' && s[i] <= '9')
+		if (p_str[i] >= '0' && p_str[i] <= '9')
 		{
 			result *= 10;
-			result += (s[i] - '0');
+			result += (p_str[i] - '0');
 			if (result > INT_MAX)
 				return (-1);
 		}
@@ -37,38 +36,37 @@ int _erratoi(char *s)
  */
 void print_error(info_t *info, char *estr)
 {
-	_eputs(info->fname);
-	_eputs(": ");
-	print_d(info->line_count, STDERR_FILENO);
-	_eputs(": ");
-	_eputs(info->argv[0]);
-	_eputs(": ");
-	_eputs(estr);
+	p_eputs(info->fname);
+	p_eputs(": ");
+	print_int(info->line_count, STDERR_FILENO);
+	p_eputs(": ");
+	p_eputs(info->argv[0]);
+	p_eputs(": ");
+	p_eputs(estr);
 }
 
 /**
- * print_d - function prints a decimal (integer) number (base 10)
- * @input: the input
- * @fd: the filedescriptor to write to
- *
- * Return: number of characters printed
+ * print_int - To print an interger
+ * @p_int: the int
+ * @p_filed: the filedescriptor
+ * Return: no of chars
  */
-int print_d(int input, int fd)
+int print_int(int p_int, int p_filed)
 {
 	int (*__putchar)(char) = _putchar;
 	int i, count = 0;
 	unsigned int _abs_, current;
 
-	if (fd == STDERR_FILENO)
-		__putchar = _eputchar;
-	if (input < 0)
+	if (p_filed == STDERR_FILENO)
+		__putchar = p_eputchar;
+	if (p_int < 0)
 	{
-		_abs_ = -input;
+		_abs_ = -p_int;
 		__putchar('-');
 		count++;
 	}
 	else
-		_abs_ = input;
+		_abs_ = p_int;
 	current = _abs_;
 	for (i = 1000000000; i > 1; i /= 10)
 	{
@@ -86,55 +84,54 @@ int print_d(int input, int fd)
 }
 
 /**
- * convert_number - converter function, a clone of itoa
- * @num: number
- * @base: base
- * @flags: argument flags
- *
+ * p_iota - replacement for iota
+ * @p_int: integer
+ * @p_base: base
+ * @p_flag: flags
  * Return: string
  */
-char *convert_number(long int num, int base, int flags)
+char *p_iota(long int p_int, int p_base, int p_flag)
 {
-	static char *array;
-	static char buffer[50];
-	char sign = 0;
-	char *ptr;
-	unsigned long n = num;
+	static char *p_array;
+	static char p_buf[50];
+	char p_sign = 0;
+	char *pointer;
+	unsigned long i = p_int;
 
-	if (!(flags & CONVERT_UNSIGNED) && num < 0)
+	if (!(p_flag & CONVERT_UNSIGNED) && p_int < 0)
 	{
-		n = -num;
-		sign = '-';
+		i = -p_int;
+		p_sign = '-';
 
 	}
-	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
-	ptr = &buffer[49];
-	*ptr = '\0';
+	p_array = p_flag & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	pointer = &p_buf[49];
+	*pointer = '\0';
 
-	do	{
-		*--ptr = array[n % base];
-		n /= base;
-	} while (n != 0);
+	do
+	{
+		*--pointer = p_array[i % p_base];
+		i /= p_base;
+	} while (i != 0);
 
-	if (sign)
-		*--ptr = sign;
-	return (ptr);
+	if (p_sign)
+		*--pointer = p_sign;
+	return (pointer);
 }
 
 /**
- * remove_comments - function replaces first instance of '#' with '\0'
- * @buf: address of the string to modify
- *
- * Return: Always 0;
+ * p_comment - Changes a comment to a null terminator
+ * @p_str: the string
+ * Return: 0;
  */
-void remove_comments(char *buf)
+void p_comment(char *p_str)
 {
 	int i;
 
-	for (i = 0; buf[i] != '\0'; i++)
-		if (buf[i] == '#' && (!i || buf[i - 1] == ' '))
+	for (i = 0; p_str[i] != '\0'; i++)
+		if (p_str[i] == '#' && (!i || p_str[i - 1] == ' '))
 		{
-			buf[i] = '\0';
+			p_str[i] = '\0';
 			break;
 		}
 }
