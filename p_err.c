@@ -25,14 +25,14 @@ void p_eputs(char *p_str)
 int p_eputchar(char c)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[P_WRITE_BUFFER_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (c == P_BUFFER_FLUSH || i >= P_WRITE_BUFFER_SIZE)
 	{
 		write(2, buf, i);
 		i = 0;
 	}
-	if (c != BUF_FLUSH)
+	if (c != P_BUFFER_FLUSH)
 		buf[i++] = c;
 	return (1);
 }
@@ -46,14 +46,14 @@ int p_eputchar(char c)
 int p_putfiled(char p, int p_fd)
 {
 	static int i;
-	static char p_buf[WRITE_BUF_SIZE];
+	static char p_buf[P_WRITE_BUFFER_SIZE];
 
-	if (p == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (p == P_BUFFER_FLUSH || i >= P_WRITE_BUFFER_SIZE)
 	{
 		write(p_fd, p_buf, i);
 		i = 0;
 	}
-	if (p != BUF_FLUSH)
+	if (p != P_BUFFER_FLUSH)
 		p_buf[i++] = p;
 	return (1);
 }

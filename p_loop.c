@@ -16,7 +16,7 @@ int p_shell(info_t *p_info, char **av)
 		p_clear_info(p_info);
 		if (p_interact(p_info))
 			_puts("$ ");
-		p_eputchar(BUF_FLUSH);
+		p_eputchar(P_BUFFER_FLUSH);
 		r = p_get_input(p_info);
 		if (r != -1)
 		{

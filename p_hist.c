@@ -45,7 +45,7 @@ int p_write_history(info_t *p_args)
 		p_putsfiled(new->str, fd);
 		p_putfiled('\n', fd);
 	}
-	p_putfiled(BUF_FLUSH, fd);
+	p_putfiled(P_BUFFER_FLUSH, fd);
 	close(fd);
 	return (1);
 }

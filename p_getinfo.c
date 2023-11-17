@@ -68,6 +68,6 @@ void p_free_info(info_t *p_args, int p_all)
 		p_null_free((void **)p_args->cmd_buf);
 		if (p_args->readfd > 2)
 			close(p_args->readfd);
-		_putchar(BUF_FLUSH);
+		_putchar(P_BUFFER_FLUSH);
 	}
 }

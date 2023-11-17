@@ -55,7 +55,7 @@ ssize_t p_get_input(info_t *p_args)
 	ssize_t p_bytes = 0;
 	char **p_buf = &(p_args->arg), *p;
 
-	_putchar(BUF_FLUSH);
+	_putchar(P_BUFFER_FLUSH);
 	p_bytes = input_buf(p_args, &buffer, &len);
 	if (p_bytes == -1)
 		return (-1);
@@ -100,7 +100,7 @@ ssize_t read_buf(info_t *info, char *buf, size_t *i)
 
 	if (*i)
 		return (0);
-	r = read(info->readfd, buf, READ_BUF_SIZE);
+	r = read(info->readfd, buf, P_READ_BUFFER_SIZE);
 	if (r >= 0)
 		*i = r;
 	return (r);
@@ -115,7 +115,7 @@ ssize_t read_buf(info_t *info, char *buf, size_t *i)
  */
 int p_getline(info_t *p_args, char **pointer, size_t *length)
 {
-	static char buffer[READ_BUF_SIZE];
+	static char buffer[P_READ_BUFFER_SIZE];
 	static size_t i, len;
 	size_t k;
 	ssize_t r = 0, size = 0;
@@ -155,5 +155,5 @@ void p_ctrlc(__attribute__((unused))int si)
 {
 	_puts("\n");
 	_puts("$ ");
-	_putchar(BUF_FLUSH);
+	_putchar(P_BUFFER_FLUSH);
 }

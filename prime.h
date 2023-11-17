@@ -12,9 +12,9 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#define READ_BUF_SIZE 1024
-#define WRITE_BUF_SIZE 1024
-#define BUF_FLUSH -1
+#define P_READ_BUFFER_SIZE 1024
+#define P_WRITE_BUFFER_SIZE 1024
+#define P_BUFFER_FLUSH -1
 #define CMD_NORM	0
 #define CMD_OR		1
 #define CMD_AND		2
@@ -28,7 +28,7 @@
 
 extern char **environ;
 
-/**
+	/**
  * struct liststr - singly linked list
  * @num: the number field
  * @str: a string
