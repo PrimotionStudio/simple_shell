@@ -28,17 +28,22 @@
 
 extern char **environ;
 
-	/**
- * struct liststr - singly linked list
- * @num: the number field
- * @str: a string
- * @next: points to the next node
+/**
+ * struct liststr - singly linked list node for string data
+ * @num: the numerical field associated with the node
+ * @str: a string stored in the node
+ * @next: points to the next node in the list
+ *
+ * Description:
+ * This structure represents a node in a singly linked list that stores both
+ * numerical and string data. It is commonly used in the shell program for
+ * various functionalities such as history and linked list operations.
  */
 typedef struct liststr
 {
-	int num;	/*  The number field. */
-	char *str;	/* a string */
-	struct liststr *next;	/* points to the next node */
+    int num;            /* The numerical field associated with the node. */
+    char *str;          /* A string stored in the node. */
+    struct liststr *next;  /* Points to the next node in the list. */
 } list_t;
 
 /**
