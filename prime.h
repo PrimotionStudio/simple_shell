@@ -36,7 +36,7 @@ extern char **environ;
  */
 typedef struct liststr
 {
-	int num; 	/*  The number field. */
+	int num;	/*  The number field. */
 	char *str;	/* a string */
 	struct liststr *next;	/* points to the next node */
 } list_t;
