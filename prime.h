@@ -41,9 +41,9 @@ extern char **environ;
  */
 typedef struct liststr
 {
-    int num;            /* The numerical field associated with the node. */
-    char *str;          /* A string stored in the node. */
-    struct liststr *next;  /* Points to the next node in the list. */
+	int num;	/* The numerical field associated with the node. */
+	char *str;	/* A string stored in the node. */
+	struct liststr *next;	/* Points to the next node in the list. */
 } list_t;
 
 /**
