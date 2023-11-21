@@ -1,159 +1,98 @@
 #include "prime.h"
 
 /**
- * input_buf - buffers chained commands
- * @info: parameter struct
- * @buf: address of buffer
- * @len: address of len var
- *
- * Return: bytes read
+ * read_buffer - Used to read the buffer
+ * @buffer: The buffer
+ * @buffer_size: the size of the buffer
+ * @fd: The file
+ * Return: the chars read
  */
-ssize_t input_buf(info_t *info, char **buf, size_t *len)
+ssize_t read_buffer(char *buffer, size_t buffer_size, FILE *fd)
 {
-	ssize_t r = 0;
-	size_t len_p = 0;
+	ssize_t chars_read = read(fileno(fd), buffer, buffer_size);
 
-	if (!*len)
+	if (chars_read == 0)
+		return (-1);
+	else if (chars_read == (ssize_t)-1)
 	{
-		free(*buf);
-		*buf = NULL;
-		signal(SIGINT, p_ctrlc);
-#if USE_GETLINE
-		r = getline(buf, &len_p, stdin);
-#else
-		r = p_getline(info, buf, &len_p);
-#endif
-		if (r > 0)
-		{
-			if ((*buf)[r - 1] == '\n')
-			{
-				(*buf)[r - 1] = '\0';
-				r--;
-			}
-			info->linecount_flag = 1;
-			p_comment(*buf);
-			p_build_history(info, *buf, info->histcount++);
-			/* if (_strchr(*buf, ';')) is this a command chain? */
-			{
-				*len = r;
-				info->cmd_buf = buf;
-			}
-		}
+		perror("read");
+		exit(EXIT_FAILURE);
 	}
-	return (r);
+	return (chars_read);
 }
 
 /**
- * p_get_input - gets a whole line
- * @p_args: structure
- * Return: bytes
- */
-ssize_t p_get_input(info_t *p_args)
+  * extract_line - Extract the line
+  * @lineptr: the line
+  * @n: the size
+  * @buffer: The buffer
+  * @start: the start
+  * @end: The end
+  * Return: The size
+  */
+ssize_t extract_line(char **lineptr, size_t *n,
+		char *buffer, size_t start, size_t end)
 {
-	static char *buffer;
-	static size_t i, j, len;
-	ssize_t p_bytes = 0;
-	char **p_buf = &(p_args->arg), *p;
+	size_t line_index = 0, j = 0;
+	char *line;
 
-	_putchar(P_BUFFER_FLUSH);
-	p_bytes = input_buf(p_args, &buffer, &len);
-	if (p_bytes == -1)
-		return (-1);
-	if (len)
+	line = (char *)malloc(end - start + 1);
+	if (line == NULL)
 	{
-		j = i;
-		p = buffer + i;
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	for (j = start; j < end; j++)
+		line[line_index++] = buffer[j];
+	line[end - start] = '\0';
+	*lineptr = line;
+	*n = end - start + 1;
+	return (end - start);
+}
 
-		p_check_chain(p_args, buffer, &j, i, len);
-		while (j < len)
+/**
+ * _getline - Replica of the get line
+ * @lineptr: The line
+ * @n: The size
+ * @fd: The File
+ * Return: 0
+ */
+ssize_t _getline(char **lineptr, size_t *n, FILE *fd)
+{
+	size_t i = 0, chars_read = 0, buffer_index = 0;
+	char buffer[BUFFER_SIZE];
+	int newline_found = 0;
+
+	if (lineptr == NULL || n == NULL)
+	{
+		errno = EINVAL;
+		return (-1);
+	}
+	while (1)
+	{
+		if (buffer_index >= chars_read)
 		{
-			if (p_is_chain(p_args, buffer, &j))
+			chars_read = read_buffer(buffer, BUFFER_SIZE, fd);
+			if (chars_read <= 0)
+			{
+				if (i == 0 && chars_read <= 0)
+					return (-1);
+				return (i);
+			}
+			buffer_index = 0;
+		}
+		for (; buffer_index < chars_read; ++buffer_index)
+		{
+			if (buffer[buffer_index] == '\n')
+			{
+				newline_found = 1;
+				buffer_index++;
 				break;
-			j++;
+			}
+			i++;
 		}
-
-		i = j + 1;
-		if (i >= len)
-		{
-			i = len = 0;
-			p_args->cmd_buf_type = CMD_NORM;
-		}
-
-		*p_buf = p;
-		return (_strlen(p));
+		if (newline_found)
+			return (extract_line(lineptr, n, buffer,
+						buffer_index - i - 1, buffer_index));
 	}
-
-	*p_buf = buffer;
-	return (p_bytes);
-}
-
-/**
- * read_buf - reads a buffer
- * @info: parameter struct
- * @buf: buffer
- * @i: size
- * Return: r
- */
-ssize_t read_buf(info_t *info, char *buf, size_t *i)
-{
-	ssize_t r = 0;
-
-	if (*i)
-		return (0);
-	r = read(info->readfd, buf, P_READ_BUFFER_SIZE);
-	if (r >= 0)
-		*i = r;
-	return (r);
-}
-
-/**
- * p_getline - gets line of commands from stdin
- * @p_args: structure
- * @pointer: pointer or NULL
- * @length: length of buffer
- * Return: the size of line read
- */
-int p_getline(info_t *p_args, char **pointer, size_t *length)
-{
-	static char buffer[P_READ_BUFFER_SIZE];
-	static size_t i, len;
-	size_t k;
-	ssize_t r = 0, size = 0;
-	char *p = NULL, *p_new = NULL, *str;
-
-	p = *pointer;
-	if (p && length)
-		size = *length;
-	if (i == len)
-		i = len = 0;
-	r = read_buf(p_args, buffer, &len);
-	if (r == -1 || (r == 0 && len == 0))
-		return (-1);
-	str = _strchr(buffer + i, '\n');
-	k = str ? 1 + (unsigned int)(str - buffer) : len;
-	p_new = _realloc(p, size, size ? size + k : k + 1);
-	if (!p_new)
-		return (p ? free(p), -1 : -1);
-	if (size)
-		_strncat(p_new, buffer + i, k - i);
-	else
-		_strncpy(p_new, buffer + i, k - i + 1);
-	size += k - i;
-	i = k;
-	p = p_new;
-	if (length)
-		*length = size;
-	*pointer = p;
-	return (size);
-}
-
-/**
- * p_ctrlc - handles CTRL + C gracefully
- * @si: the signal
- */
-void p_ctrlc(__attribute__((unused))int si)
-{
-	_puts("\n");
-	_puts("$ ");
-	_putchar(P_BUFFER_FLUSH);
 }
